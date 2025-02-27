@@ -1,0 +1,14 @@
+services:
+  postgresql:
+    image: postgres:16.2-bullseye
+    environment:
+      - POSTGRES_USER=ticketmaster
+      - POSTGRES_PASSWORD=ticketmaster
+      - POSTGRES_DB=ticketmaster
+    ports:
+      - 5432:5432
+  redis:
+    image: redis:7.4.2
+    ports:
+      - 6379:6379
+
