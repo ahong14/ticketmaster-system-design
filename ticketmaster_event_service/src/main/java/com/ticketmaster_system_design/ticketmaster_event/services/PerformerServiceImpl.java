@@ -4,6 +4,8 @@ import com.ticketmaster_system_design.ticketmaster_event.models.Performer;
 import com.ticketmaster_system_design.ticketmaster_event.models.requests.CreatePerformerRequest;
 import com.ticketmaster_system_design.ticketmaster_event.repositories.PerformerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@CacheConfig(cacheNames = "performers")
 public class PerformerServiceImpl implements PerformerService {
     private final PerformerRepository performerRepository;
 
@@ -32,6 +35,7 @@ public class PerformerServiceImpl implements PerformerService {
     }
 
     @Override
+    @Cacheable(key = "#performerId")
     public Performer getPerformer(UUID performerId) {
         Optional<Performer> foundPerformer = this.performerRepository.findById(performerId);
         if (foundPerformer.isEmpty()) {

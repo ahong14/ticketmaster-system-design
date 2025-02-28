@@ -5,6 +5,9 @@ import com.ticketmaster_system_design.ticketmaster_event.models.requests.CreateE
 import com.ticketmaster_system_design.ticketmaster_event.repositories.EventRepository;
 import com.ticketmaster_system_design.ticketmaster_event.repositories.PerformerRepository;
 import com.ticketmaster_system_design.ticketmaster_event.repositories.VenueRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +16,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@CacheConfig(cacheNames = "events")
 public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
 
@@ -20,6 +24,7 @@ public class EventServiceImpl implements EventService {
 
     private final PerformerRepository performerRepository;
 
+    @Autowired
     public EventServiceImpl(EventRepository eventRepository, VenueRepository venueRepository, PerformerRepository performerRepository) {
         this.eventRepository = eventRepository;
         this.venueRepository = venueRepository;
@@ -32,6 +37,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Cacheable(key = "#eventId")
     public Event getEvent(UUID eventId) {
         Optional<Event> foundEvent = this.eventRepository.findById(eventId);
         if (foundEvent.isEmpty()) {

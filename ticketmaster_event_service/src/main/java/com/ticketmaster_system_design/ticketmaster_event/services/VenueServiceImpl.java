@@ -4,6 +4,8 @@ import com.ticketmaster_system_design.ticketmaster_event.models.Venue;
 import com.ticketmaster_system_design.ticketmaster_event.models.requests.CreateVenueRequest;
 import com.ticketmaster_system_design.ticketmaster_event.repositories.VenueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@CacheConfig(cacheNames = "venues")
 public class VenueServiceImpl implements VenueService {
     private final VenueRepository venueRepository;
 
@@ -35,6 +38,7 @@ public class VenueServiceImpl implements VenueService {
     }
 
     @Override
+    @Cacheable(key = "#venueId")
     public Venue getVenue(UUID venueId) {
         Optional<Venue> foundVenue = this.venueRepository.findById(venueId);
         if (foundVenue.isEmpty()) {
