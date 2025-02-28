@@ -9,7 +9,7 @@ import jakarta.persistence.Id;
 import java.util.UUID;
 
 @Entity
-public class User {
+public class TicketmasterUser {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;

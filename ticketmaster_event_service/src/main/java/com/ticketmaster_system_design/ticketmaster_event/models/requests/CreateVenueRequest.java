@@ -1,18 +1,6 @@
-package com.ticketmaster_system_design.ticketmaster_event.models;
+package com.ticketmaster_system_design.ticketmaster_event.models.requests;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
-import java.util.UUID;
-
-@Entity
-public class Venue {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
-
+public class CreateVenueRequest {
     private String description;
 
     private String location;
@@ -21,23 +9,13 @@ public class Venue {
 
     private Integer seats;
 
-    public Venue() {
+    public CreateVenueRequest() {}
 
-    }
-
-    public Venue(String description, String location, String coordinates, Integer seats) {
+    public CreateVenueRequest(String description, String location, String coordinates, Integer seats) {
         this.description = description;
         this.location = location;
         this.coordinates = coordinates;
         this.seats = seats;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 
     public String getDescription() {
@@ -74,11 +52,11 @@ public class Venue {
 
     @Override
     public String toString() {
-        return "Venue{" +
-                "id=" + id +
-                ", description='" + description + '\'' +
+        return "CreateVenueRequest{" +
+                "description='" + description + '\'' +
                 ", location='" + location + '\'' +
                 ", coordinates='" + coordinates + '\'' +
+                ", seats=" + seats +
                 '}';
     }
 }
