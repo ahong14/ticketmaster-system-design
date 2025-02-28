@@ -1,5 +1,6 @@
 package com.ticketmaster_system_design.ticketmaster_event.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ticketmaster_system_design.ticketmaster_event.models.Event;
 import com.ticketmaster_system_design.ticketmaster_event.models.requests.CreateEventRequest;
 import com.ticketmaster_system_design.ticketmaster_event.services.EventServiceImpl;
@@ -33,9 +34,8 @@ public class EventController {
     }
 
     @PostMapping
-    public ResponseEntity<Event> createEvent(@RequestBody CreateEventRequest createEventRequest) {
+    public ResponseEntity<Event> createEvent(@RequestBody CreateEventRequest createEventRequest) throws JsonProcessingException {
         Event createdEvent = this.eventService.createEvent(createEventRequest);
         return ResponseEntity.ok(createdEvent);
     }
-
 }

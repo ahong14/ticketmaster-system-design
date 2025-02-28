@@ -1,17 +1,15 @@
-package com.ticketmaster_system_design.ticketmaster_event;
+package com.ticketmaster_system_design.ticketmaster_ticket_creator;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.kafka.annotation.EnableKafka;
 
 @SpringBootApplication
-@EnableCaching
 @EnableKafka
-public class TicketmasterEventApplication {
+public class TicketmasterTicketCreatorApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(TicketmasterEventApplication.class, args);
+		SpringApplication.run(TicketmasterTicketCreatorApplication.class, args);
 	}
 
 }

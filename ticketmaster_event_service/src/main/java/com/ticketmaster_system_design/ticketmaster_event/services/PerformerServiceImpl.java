@@ -8,6 +8,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -31,6 +32,9 @@ public class PerformerServiceImpl implements PerformerService {
     @Override
     public Performer createPerformer(CreatePerformerRequest createPerformerRequest) {
         Performer newPerformer = new Performer(createPerformerRequest.getName(), createPerformerRequest.getDescription());
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        newPerformer.setCreatedAt(currentDateTime);
+        newPerformer.setUpdatedAt(currentDateTime);
         return this.performerRepository.save(newPerformer);
     }
 

@@ -8,6 +8,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -29,6 +30,9 @@ public class VenueServiceImpl implements VenueService {
                 createVenueRequest.getLocation(),
                 createVenueRequest.getCoordinates(),
                 createVenueRequest.getSeats());
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        newVenue.setCreatedAt(currentDateTime);
+        newVenue.setUpdatedAt(currentDateTime);
         return this.venueRepository.save(newVenue);
     }
 

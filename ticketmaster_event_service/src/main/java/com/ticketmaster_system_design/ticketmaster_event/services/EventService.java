@@ -1,6 +1,7 @@
 package com.ticketmaster_system_design.ticketmaster_event.services;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ticketmaster_system_design.ticketmaster_event.models.Event;
 import com.ticketmaster_system_design.ticketmaster_event.models.requests.CreateEventRequest;
 
@@ -12,7 +13,9 @@ public interface EventService {
 
     Event getEvent(UUID eventId);
 
-    Event createEvent(CreateEventRequest createEventRequest);
+    Event createEvent(CreateEventRequest createEventRequest) throws JsonProcessingException;
+
+    void publishEventMessage(Event event) throws JsonProcessingException;
 
 
 }

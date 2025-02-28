@@ -1,5 +1,8 @@
 package com.ticketmaster_system_design.ticketmaster_event.models.requests;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class CreateEventRequest {
@@ -11,13 +14,19 @@ public class CreateEventRequest {
 
     private String description;
 
+    @JsonFormat(pattern = "YYYY-MM-DD HH:mm")
+    private LocalDateTime eventStartTime;
+
+    private int size;
     public CreateEventRequest() {}
 
-    public CreateEventRequest(UUID venueId, UUID performerId, String name, String description) {
+    public CreateEventRequest(UUID venueId, UUID performerId, String name, String description, LocalDateTime eventStartTime, int size) {
         this.venueId = venueId;
         this.performerId = performerId;
         this.name = name;
         this.description = description;
+        this.eventStartTime = eventStartTime;
+        this.size = size;
     }
 
     public UUID getVenueId() {
@@ -52,6 +61,22 @@ public class CreateEventRequest {
         this.description = description;
     }
 
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public LocalDateTime getEventStartTime() {
+        return eventStartTime;
+    }
+
+    public void setEventStartTime(LocalDateTime eventStartTime) {
+        this.eventStartTime = eventStartTime;
+    }
+
     @Override
     public String toString() {
         return "CreateEventRequest{" +
@@ -59,6 +84,8 @@ public class CreateEventRequest {
                 ", performerId=" + performerId +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
+                ", eventStartTime=" + eventStartTime +
+                ", size=" + size +
                 '}';
     }
 }

@@ -1,0 +1,43 @@
+package com.ticketmaster_system_design.ticketmaster_ticket_creator.services;
+
+import com.ticketmaster_system_design.ticketmaster_ticket_creator.models.Event;
+import com.ticketmaster_system_design.ticketmaster_ticket_creator.models.Ticket;
+import com.ticketmaster_system_design.ticketmaster_ticket_creator.models.TicketEnum;
+import com.ticketmaster_system_design.ticketmaster_ticket_creator.repositories.EventRepository;
+import com.ticketmaster_system_design.ticketmaster_ticket_creator.repositories.TicketRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.UUID;
+
+@Service
+public class TicketServiceImpl implements TicketService {
+    private final TicketRepository ticketRepository;
+
+    private final EventRepository eventRepository;
+
+    @Autowired
+    public TicketServiceImpl(TicketRepository ticketRepository, EventRepository eventRepository) {
+        this.ticketRepository = ticketRepository;
+        this.eventRepository = eventRepository;
+    }
+
+    @Override
+    public Event createTickets(Event event) {
+        // create number of tickets based on event size
+        int size = event.getSize();
+        ArrayList<Ticket> tickets = new ArrayList<>();
+
+        for (int i = 0; i < size; i++) {
+            // TODO get price of ticket from event
+            Ticket newTicket = new Ticket(event.getId(), "Event Seat", TicketEnum.AVAILABLE, 100.00);
+            this.ticketRepository.save(newTicket);
+            tickets.add(newTicket);
+
+        }
+
+        event.setTickets(tickets);
+        return this.eventRepository.save(event);
+    }
+}

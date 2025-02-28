@@ -1,14 +1,13 @@
 package com.ticketmaster_system_design.ticketmaster_event.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
+@Table(name = "performers")
 public class Performer implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -17,6 +16,10 @@ public class Performer implements Serializable {
     private String name;
 
     private String description;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 
     public Performer() {
 
@@ -49,6 +52,22 @@ public class Performer implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     @Override
