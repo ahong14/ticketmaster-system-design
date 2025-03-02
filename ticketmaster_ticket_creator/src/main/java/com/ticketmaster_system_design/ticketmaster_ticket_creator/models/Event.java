@@ -26,6 +26,8 @@ public class Event implements Serializable {
 
     private int size;
 
+    private double price;
+
     private LocalDateTime eventStartTime;
 
     private LocalDateTime createdAt;
@@ -47,12 +49,15 @@ public class Event implements Serializable {
         this.description = description;
     }
 
-    public Event(UUID performerId, String name, String description, int size) {
+    public Event(UUID venueId, UUID performerId, String name, String description, int size, double price) {
+        this.venueId = venueId;
         this.performerId = performerId;
         this.name = name;
         this.description = description;
         this.size = size;
+        this.price = price;
     }
+
 
     public UUID getId() {
         return id;
@@ -134,6 +139,14 @@ public class Event implements Serializable {
         this.updatedAt = updatedAt;
     }
 
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
     @Override
     public String toString() {
         return "Event{" +
@@ -142,6 +155,12 @@ public class Event implements Serializable {
                 ", performerId=" + performerId +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
+                ", size=" + size +
+                ", price=" + price +
+                ", eventStartTime=" + eventStartTime +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", tickets=" + tickets +
                 '}';
     }
 }

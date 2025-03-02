@@ -30,11 +30,11 @@ public class TicketServiceImpl implements TicketService {
     public Event createTickets(Event event) {
         // create number of tickets based on event size
         int size = event.getSize();
+        double ticketPrice = event.getPrice();
         List<Ticket> tickets = new ArrayList<>();
 
         for (int i = 0; i < size; i++) {
-            // TODO get price of ticket from event
-            Ticket newTicket = new Ticket(event.getId(), "Event Seat", TicketEnum.AVAILABLE, 100.00);
+            Ticket newTicket = new Ticket(event.getId(), "Event Seat", TicketEnum.AVAILABLE, ticketPrice);
             this.ticketRepository.save(newTicket);
             logger.info("Created ticket: " + newTicket.getId());
             tickets.add(newTicket);

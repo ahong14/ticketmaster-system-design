@@ -48,7 +48,8 @@ public class KafkaConsumer {
         Event updatedEvent = this.ticketService.createTickets(eventMessage);
 
         try {
-            this.eventRepository.save(updatedEvent);
+            updatedEvent = this.eventRepository.save(updatedEvent);
+            logger.info("Created tickets for event id: " + updatedEvent.getId());
         } catch (Exception exception) {
             logger.error("Exception during event creation: " + exception.getMessage());
         }
