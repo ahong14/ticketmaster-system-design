@@ -34,8 +34,8 @@ public class VenueController implements Serializable {
     }
 
     @GetMapping(path = "/{venueId}")
-    public ResponseEntity<Venue> getVenue(@PathVariable String venueId) {
-        Venue foundVenue = this.venueService.getVenue(UUID.fromString(venueId));
+    public ResponseEntity<Venue> getVenue(@PathVariable UUID venueId) {
+        Venue foundVenue = this.venueService.getVenue(venueId);
         return ResponseEntity.ok(foundVenue);
     }
 }

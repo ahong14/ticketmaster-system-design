@@ -33,8 +33,8 @@ public class PerformerController {
     }
 
     @GetMapping(path = "/{performerId}")
-    public ResponseEntity<Performer> getPerformer(@PathVariable String performerId) {
-        Performer foundPerformer = this.performerService.getPerformer(UUID.fromString(performerId));
+    public ResponseEntity<Performer> getPerformer(@PathVariable UUID performerId) {
+        Performer foundPerformer = this.performerService.getPerformer(performerId);
         return ResponseEntity.ok(foundPerformer);
     }
 }

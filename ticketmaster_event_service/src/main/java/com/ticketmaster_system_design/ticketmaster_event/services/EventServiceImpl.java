@@ -19,6 +19,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -76,7 +77,9 @@ public class EventServiceImpl implements EventService {
             throw new IllegalArgumentException("Invalid performer id provided");
         }
 
-        LocalDateTime eventStartTime = createEventRequest.getEventStartTime();
+        String dateTimeString = createEventRequest.getEventStartTime();
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime eventStartTime = LocalDateTime.parse(dateTimeString, dateTimeFormatter);
         LocalDateTime currentDateTime = LocalDateTime.now();
 
         Event newEvent = new Event(createEventRequest.getVenueId(),

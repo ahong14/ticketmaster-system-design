@@ -1,5 +1,6 @@
 package com.ticketmaster_system_design.ticketmaster_event.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -33,6 +34,7 @@ public class Event implements Serializable {
 
     private LocalDateTime updatedAt;
 
+    @JsonIgnore
     @OneToMany
     private List<Ticket> tickets;
 

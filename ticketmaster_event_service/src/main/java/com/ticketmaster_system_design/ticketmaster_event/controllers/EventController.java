@@ -28,8 +28,8 @@ public class EventController {
     }
 
     @GetMapping(path = "/{eventId}")
-    public ResponseEntity<Event> getEvent(@PathVariable String eventId) {
-        Event foundEvent = this.eventService.getEvent(UUID.fromString(eventId));
+    public ResponseEntity<Event> getEvent(@PathVariable UUID eventId) {
+        Event foundEvent = this.eventService.getEvent(eventId);
         return ResponseEntity.ok(foundEvent);
     }
 
