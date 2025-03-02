@@ -1,12 +1,16 @@
 package com.ticketmaster_system_design.ticketmaster_ticket_creator.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
+@Table(name = "events")
 public class Event implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -22,8 +26,15 @@ public class Event implements Serializable {
 
     private int size;
 
+    private LocalDateTime eventStartTime;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
+
+    @JsonIgnore
     @OneToMany
-    private ArrayList<Ticket> tickets;
+    private List<Ticket> tickets;
 
     public Event() {
 
@@ -91,12 +102,36 @@ public class Event implements Serializable {
         this.size = size;
     }
 
-    public ArrayList<Ticket> getTickets() {
+    public List<Ticket> getTickets() {
         return tickets;
     }
 
-    public void setTickets(ArrayList<Ticket> tickets) {
-        this.tickets = tickets;
+    public void setTickets(List<Ticket> tickets) {
+        this.tickets = new ArrayList<>(tickets);
+    }
+
+    public LocalDateTime getEventStartTime() {
+        return eventStartTime;
+    }
+
+    public void setEventStartTime(LocalDateTime eventStartTime) {
+        this.eventStartTime = eventStartTime;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     @Override
@@ -110,3 +145,4 @@ public class Event implements Serializable {
                 '}';
     }
 }
+

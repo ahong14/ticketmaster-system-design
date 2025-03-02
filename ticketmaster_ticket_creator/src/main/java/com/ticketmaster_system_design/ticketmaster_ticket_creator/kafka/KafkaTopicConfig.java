@@ -32,7 +32,7 @@ public class KafkaTopicConfig {
 
     // container factory for consumer factory
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, Event> costsKafkaListenerContainerFactory() {
+    public ConcurrentKafkaListenerContainerFactory<String, Event> ticketKafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, Event> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
