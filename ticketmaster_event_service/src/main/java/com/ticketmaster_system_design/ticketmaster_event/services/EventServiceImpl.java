@@ -82,7 +82,10 @@ public class EventServiceImpl implements EventService {
         Event newEvent = new Event(createEventRequest.getVenueId(),
                 createEventRequest.getPerformerId(),
                 createEventRequest.getName(),
-                createEventRequest.getDescription());
+                createEventRequest.getDescription(),
+                createEventRequest.getSize(),
+                createEventRequest.getPrice()
+        );
 
         newEvent.setEventStartTime(eventStartTime);
         newEvent.setCreatedAt(currentDateTime);

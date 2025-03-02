@@ -14,19 +14,22 @@ public class CreateEventRequest {
 
     private String description;
 
+    private Double price;
+
     @JsonFormat(pattern = "YYYY-MM-DD HH:mm")
     private LocalDateTime eventStartTime;
 
     private int size;
     public CreateEventRequest() {}
 
-    public CreateEventRequest(UUID venueId, UUID performerId, String name, String description, LocalDateTime eventStartTime, int size) {
+    public CreateEventRequest(UUID venueId, UUID performerId, String name, String description, LocalDateTime eventStartTime, int size, double price) {
         this.venueId = venueId;
         this.performerId = performerId;
         this.name = name;
         this.description = description;
         this.eventStartTime = eventStartTime;
         this.size = size;
+        this.price = price;
     }
 
     public UUID getVenueId() {
@@ -77,6 +80,14 @@ public class CreateEventRequest {
         this.eventStartTime = eventStartTime;
     }
 
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
     @Override
     public String toString() {
         return "CreateEventRequest{" +
@@ -84,6 +95,7 @@ public class CreateEventRequest {
                 ", performerId=" + performerId +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
+                ", price=" + price +
                 ", eventStartTime=" + eventStartTime +
                 ", size=" + size +
                 '}';

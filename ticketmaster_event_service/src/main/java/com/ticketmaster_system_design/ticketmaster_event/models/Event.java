@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -24,6 +25,8 @@ public class Event implements Serializable {
 
     private int size;
 
+    private double price;
+
     private LocalDateTime eventStartTime;
 
     private LocalDateTime createdAt;
@@ -31,7 +34,7 @@ public class Event implements Serializable {
     private LocalDateTime updatedAt;
 
     @OneToMany
-    private ArrayList<Ticket> tickets;
+    private List<Ticket> tickets;
 
     public Event() {
 
@@ -44,11 +47,13 @@ public class Event implements Serializable {
         this.description = description;
     }
 
-    public Event(UUID performerId, String name, String description, int size) {
+    public Event(UUID venueId, UUID performerId, String name, String description, int size, double price) {
+        this.venueId = venueId;
         this.performerId = performerId;
         this.name = name;
         this.description = description;
         this.size = size;
+        this.price = price;
     }
 
 
@@ -100,12 +105,12 @@ public class Event implements Serializable {
         this.size = size;
     }
 
-    public ArrayList<Ticket> getTickets() {
+    public List<Ticket> getTickets() {
         return tickets;
     }
 
     public void setTickets(ArrayList<Ticket> tickets) {
-        this.tickets = tickets;
+        this.tickets = new ArrayList<>(tickets);
     }
 
     public LocalDateTime getEventStartTime() {
@@ -140,6 +145,12 @@ public class Event implements Serializable {
                 ", performerId=" + performerId +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
+                ", size=" + size +
+                ", price=" + price +
+                ", eventStartTime=" + eventStartTime +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", tickets=" + tickets +
                 '}';
     }
 }
