@@ -101,6 +101,15 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public void deleteEvent(UUID eventId) {
+        if (!this.eventRepository.existsById(eventId)) {
+            throw new NoSuchElementException("Event ID not found");
+        }
+
+        this.eventRepository.deleteById(eventId);
+    }
+
+    @Override
     public void publishEventMessage(Event event) throws JsonProcessingException {
         // publish message to kafka topic
         // convert event to JSON string

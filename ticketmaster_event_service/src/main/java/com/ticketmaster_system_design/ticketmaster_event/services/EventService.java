@@ -15,6 +15,8 @@ public interface EventService {
 
     Event createEvent(CreateEventRequest createEventRequest) throws JsonProcessingException;
 
+   void deleteEvent(UUID eventId);
+
     void publishEventMessage(Event event) throws JsonProcessingException;
 
 

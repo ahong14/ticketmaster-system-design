@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(path = "api/v1/tickets")
+@RequestMapping(path = "/api/v1/tickets")
 public class TicketController {
     private final TicketServiceImpl ticketService ;
 
