@@ -1,4 +1,5 @@
 services:
+  # postgres db
   postgresql:
     image: postgres:16.2-bullseye
     environment:
@@ -7,10 +8,14 @@ services:
       - POSTGRES_DB=ticketmaster
     ports:
       - 5432:5432
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+  # redis cache
   redis:
     image: redis:7.4.2
     ports:
       - 6379:6379
+  # zookeeper/kafka
   zookeeper:
     image: confluentinc/cp-zookeeper:7.4.4
     environment:
@@ -32,7 +37,8 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_HOST://localhost:29092
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_CREATE_TOPICS: "ticket_creations"
+      KAFKA_CREATE_TOPICS: "ticket_creations,cdc_topic"
+  # elasticsearch/kibana
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.17.3
     container_name: elasticsearch
@@ -42,6 +48,8 @@ services:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ports:
       - "9200:9200"
+    volumes:
+      - ./es-data:/usr/share/elasticsearch/data
   kibana:
     image: docker.elastic.co/kibana/kibana:8.17.3
     container_name: kibana
@@ -51,4 +59,11 @@ services:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
     depends_on:
       - elasticsearch
-
+  # # debezium change data capture
+  # debezium:
+  #   image: debezium/connect:2.7.3.Final
+  #   container_name: debezium
+  #   ports:
+  #     - 8083:8083
+  #   environment:
+  #     BOOTSTRAP_SERVERS: kafka:29092

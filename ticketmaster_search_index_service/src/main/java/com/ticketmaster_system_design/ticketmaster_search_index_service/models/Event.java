@@ -1,4 +1,4 @@
-package com.ticketmaster_system_design.search_service.model;
+package com.ticketmaster_system_design.ticketmaster_search_index_service.models;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.DateFormat;
@@ -6,11 +6,12 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Document(indexName = "event-index")
-public class Event {
+public class Event implements Serializable {
     @Id
     private UUID id;
 
