@@ -19,11 +19,21 @@ import java.util.UUID;
 public class VenueServiceImpl implements VenueService {
     private final VenueRepository venueRepository;
 
+    /**
+     *
+     * @param venueRepository
+     */
     @Autowired
     public VenueServiceImpl(VenueRepository venueRepository) {
         this.venueRepository = venueRepository;
     }
 
+
+    /**
+     *
+     * @param createVenueRequest
+     * @return Venue newly created venue
+     */
     @Override
     public Venue createVenue(CreateVenueRequest createVenueRequest) {
         Venue newVenue = new Venue(createVenueRequest.getDescription(),
@@ -36,11 +46,20 @@ public class VenueServiceImpl implements VenueService {
         return this.venueRepository.save(newVenue);
     }
 
+    /**
+     *
+     * @return all venues
+     */
     @Override
     public List<Venue> getVenues() {
         return this.venueRepository.findAll();
     }
 
+    /**
+     *
+     * @param venueId
+     * @return Venue found venue
+     */
     @Override
     @Cacheable(key = "#venueId")
     public Venue getVenue(UUID venueId) {

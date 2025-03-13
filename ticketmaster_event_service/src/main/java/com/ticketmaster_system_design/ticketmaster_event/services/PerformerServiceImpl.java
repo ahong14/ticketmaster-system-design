@@ -19,16 +19,29 @@ import java.util.UUID;
 public class PerformerServiceImpl implements PerformerService {
     private final PerformerRepository performerRepository;
 
+    /**
+     *
+     * @param performerRepository
+     */
     @Autowired
     public PerformerServiceImpl(PerformerRepository performerRepository) {
         this.performerRepository = performerRepository;
     }
 
+    /**
+     *
+     * @return all performers
+     */
     @Override
     public List<Performer> getPerformers() {
         return this.performerRepository.findAll();
     }
 
+    /**
+     *
+     * @param createPerformerRequest
+     * @return Performer created performer
+     */
     @Override
     public Performer createPerformer(CreatePerformerRequest createPerformerRequest) {
         Performer newPerformer = new Performer(createPerformerRequest.getName(), createPerformerRequest.getDescription());
@@ -38,6 +51,11 @@ public class PerformerServiceImpl implements PerformerService {
         return this.performerRepository.save(newPerformer);
     }
 
+    /**
+     *
+     * @param performerId
+     * @return Performer found performer
+     */
     @Override
     @Cacheable(key = "#performerId")
     public Performer getPerformer(UUID performerId) {

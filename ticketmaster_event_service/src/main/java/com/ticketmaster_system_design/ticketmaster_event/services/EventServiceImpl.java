@@ -40,6 +40,13 @@ public class EventServiceImpl implements EventService {
     @Value(value = "${topic.name.producer}")
     private String topicName;
 
+    /**
+     *
+     * @param eventRepository
+     * @param venueRepository
+     * @param performerRepository
+     * @param kafkaTemplate
+     */
     @Autowired
     public EventServiceImpl(EventRepository eventRepository, VenueRepository venueRepository, PerformerRepository performerRepository, KafkaTemplate<String, String> kafkaTemplate) {
         this.eventRepository = eventRepository;
@@ -48,11 +55,20 @@ public class EventServiceImpl implements EventService {
         this.kafkaTemplate = kafkaTemplate;
     }
 
+    /**
+     *
+     * @return List<Event> all events
+     */
     @Override
     public List<Event> getEvents() {
         return this.eventRepository.findAll();
     }
 
+    /**
+     *
+     * @param eventId
+     * @return Event found event
+     */
     @Override
     @Cacheable(key = "#eventId")
     public Event getEvent(UUID eventId) {
@@ -64,11 +80,18 @@ public class EventServiceImpl implements EventService {
         return foundEvent.get();
     }
 
+    /**
+     *
+     * @param createEventRequest
+     * @return Event newly created event
+     * @throws JsonProcessingException
+     */
     @Override
     public Event createEvent(CreateEventRequest createEventRequest) throws JsonProcessingException {
         UUID venueId = createEventRequest.getVenueId();
         UUID performerId = createEventRequest.getPerformerId();
 
+        // check if venue and performer exist
         if (!this.venueRepository.existsById(venueId)) {
             throw new IllegalArgumentException("Invalid venue id provided");
         }
@@ -100,6 +123,10 @@ public class EventServiceImpl implements EventService {
         return createdEvent;
     }
 
+    /**
+     *
+     * @param eventId
+     */
     @Override
     public void deleteEvent(UUID eventId) {
         if (!this.eventRepository.existsById(eventId)) {
@@ -109,6 +136,11 @@ public class EventServiceImpl implements EventService {
         this.eventRepository.deleteById(eventId);
     }
 
+    /**
+     *
+     * @param event
+     * @throws JsonProcessingException
+     */
     @Override
     public void publishEventMessage(Event event) throws JsonProcessingException {
         // publish message to kafka topic

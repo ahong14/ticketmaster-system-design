@@ -1,6 +1,6 @@
-package com.ticketmaster_system_design.ticketmaster_event.services;
+package com.ticketmaster_system_design.ticketmaster_booking_service.services;
 
-import com.ticketmaster_system_design.ticketmaster_event.models.Ticket;
+import com.ticketmaster_system_design.ticketmaster_booking_service.models.Ticket;
 
 import java.util.UUID;
 
