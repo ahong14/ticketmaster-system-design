@@ -21,6 +21,10 @@ public class Booking {
 
     private LocalDateTime updatedAt;
 
+    public Booking() {
+
+    }
+
     public Booking(UUID userId, List<UUID> tickets, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.userId = userId;
         this.tickets = tickets;

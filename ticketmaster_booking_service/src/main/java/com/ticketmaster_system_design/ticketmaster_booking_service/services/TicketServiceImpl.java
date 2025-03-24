@@ -43,13 +43,14 @@ public class TicketServiceImpl implements TicketService {
      * @return Ticket updated ticket
      */
     @Override
-    public Ticket updateTicketBooked(UUID ticketId) {
+    public Ticket updateTicketBooked(UUID ticketId, UUID userId) {
         Optional<Ticket> foundTicket = this.ticketRepository.findById(ticketId);
         if (foundTicket.isEmpty()) {
             throw new NoSuchElementException("Ticket ID not found");
         }
         Ticket updatedTicket = foundTicket.get();
         updatedTicket.setStatus(TicketEnum.BOOKED);
+        updatedTicket.setUserId(userId);
         return this.ticketRepository.save(updatedTicket);
     }
 
@@ -66,6 +67,7 @@ public class TicketServiceImpl implements TicketService {
         }
         Ticket updatedTicket = foundTicket.get();
         updatedTicket.setStatus(TicketEnum.AVAILABLE);
+        updatedTicket.setUserId(null);
         return this.ticketRepository.save(updatedTicket);
     }
 }

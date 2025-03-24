@@ -1,4 +1,4 @@
-package com.ticketmaster_system_design.ticketmaster_booking_service.controllers;
+package com.ticketmaster_system_design.ticketmaster_booking_service.exceptions;
 
 
 import com.ticketmaster_system_design.ticketmaster_booking_service.models.Booking;
@@ -31,4 +31,17 @@ public class BookingController {
         Booking createdBooking = this.bookingService.createBooking(createBookingRequest.getUserId(), createBookingRequest.getTickets());
         return ResponseEntity.ok(createdBooking);
     }
+
+    @PostMapping(path = "/reserve")
+    public ResponseEntity<String> reserveBooking(@RequestBody CreateBookingRequest createBookingRequest) {
+        this.bookingService.reserveBooking(createBookingRequest.getUserId(), createBookingRequest.getTickets());
+        return ResponseEntity.ok("Tickets reserved.");
+    }
+
+    @DeleteMapping(path = "/{bookingId}")
+    public ResponseEntity<Void> deleteBooking(@PathVariable UUID bookingId) {
+        this.bookingService.deleteBooking(bookingId);
+        return ResponseEntity.noContent().build();
+    }
+
 }

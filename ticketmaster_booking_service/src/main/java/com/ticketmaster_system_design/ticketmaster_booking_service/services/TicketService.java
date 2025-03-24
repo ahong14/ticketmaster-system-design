@@ -7,7 +7,7 @@ import java.util.UUID;
 public interface TicketService {
     Ticket getTicket(UUID ticketId);
 
-    Ticket updateTicketBooked(UUID ticketId);
+    Ticket updateTicketBooked(UUID ticketId, UUID userId);
 
     Ticket updateTicketAvailable(UUID ticketId);
 }
