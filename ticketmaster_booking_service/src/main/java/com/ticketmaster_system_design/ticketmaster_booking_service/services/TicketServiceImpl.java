@@ -70,4 +70,19 @@ public class TicketServiceImpl implements TicketService {
         updatedTicket.setUserId(null);
         return this.ticketRepository.save(updatedTicket);
     }
+
+
+    /**
+     *
+     * @param ticketId - ticket id to check for booking status
+     * @return - boolean indicating ticket is booked
+     */
+    @Override
+    public Boolean isTicketBooked(UUID ticketId) {
+        Optional<Ticket> foundTicket = this.ticketRepository.findById(ticketId);
+        if (foundTicket.isEmpty()) {
+            throw new NoSuchElementException("Ticket ID not found");
+        }
+        return foundTicket.get().getStatus() == TicketEnum.BOOKED;
+    }
 }

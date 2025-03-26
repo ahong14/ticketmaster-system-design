@@ -10,4 +10,6 @@ public interface TicketService {
     Ticket updateTicketBooked(UUID ticketId, UUID userId);
 
     Ticket updateTicketAvailable(UUID ticketId);
+
+    Boolean isTicketBooked(UUID ticketId);
 }

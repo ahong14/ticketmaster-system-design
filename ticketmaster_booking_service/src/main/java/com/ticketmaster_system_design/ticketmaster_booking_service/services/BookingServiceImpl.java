@@ -2,6 +2,7 @@ package com.ticketmaster_system_design.ticketmaster_booking_service.services;
 
 import com.ticketmaster_system_design.ticketmaster_booking_service.models.Booking;
 import com.ticketmaster_system_design.ticketmaster_booking_service.repositories.BookingRepository;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,15 +39,21 @@ public class BookingServiceImpl implements BookingService {
 
     /**
      *
-     * @param userId
-     * @param tickets
+     * @param userId - user id booking tickets
+     * @param tickets - list of ticket ids being reserved
      */
     @Override
     public void reserveBooking(UUID userId, List<UUID> tickets) {
         // reserve tickets to user id in redis cache, lock tickets for TTL
         for (UUID ticket : tickets) {
-            boolean lockAcquired = this.redisTemplate.opsForValue().setIfAbsent(TICKET_KEY + ticket.toString(), userId.toString(), LOCK_TTL);
-            if (lockAcquired) {
+            // if tickets not already booked
+            if (ticketService.isTicketBooked(ticket)) {
+                throw new IllegalArgumentException("Ticket ID already booked: " + ticket);
+            }
+
+            // check if tickets locked by another booking
+            Boolean lockAcquired = this.redisTemplate.opsForValue().setIfAbsent(TICKET_KEY + ticket.toString(), userId.toString(), LOCK_TTL);
+            if (lockAcquired != null && lockAcquired) {
                 log.info("Ticket ID locked: {}", ticket);
             } else {
                 log.error("Ticket ID already locked: {}", ticket);
@@ -57,10 +64,11 @@ public class BookingServiceImpl implements BookingService {
 
     /**
      *
-     * @param userId
-     * @param tickets
+     * @param userId - user id booking tickets
+     * @param tickets - list of tickets part of booking
      * @return Booking new booking created
      */
+    @Transactional
     @Override
     public Booking createBooking(UUID userId, List<UUID> tickets) {
         LocalDateTime currentTime = LocalDateTime.now();
@@ -69,13 +77,14 @@ public class BookingServiceImpl implements BookingService {
         // after booking created successfully, set ticket status to booked by user id
         for (UUID ticketId : tickets) {
             this.ticketService.updateTicketBooked(ticketId, userId);
+            this.redisTemplate.opsForValue().getAndDelete(TICKET_KEY + ticketId);
         }
         return newBooking;
     }
 
     /**
      *
-     * @param bookingId
+     * @param bookingId - booking id to look for
      * @return Booking found booking
      */
     @Override
@@ -90,8 +99,9 @@ public class BookingServiceImpl implements BookingService {
 
     /**
      *
-     * @param bookingId
+     * @param bookingId - booking id to delete
      */
+    @Transactional
     @Override
     public void deleteBooking(UUID bookingId) {
         Optional<Booking> foundBooking = this.bookingRepository.findById(bookingId);
@@ -100,8 +110,20 @@ public class BookingServiceImpl implements BookingService {
         }
         Booking deletedBooking = foundBooking.get();
         this.bookingRepository.delete(deletedBooking);
+
+        // free up tickets, set to available after deleting booking
         for (UUID ticketId : deletedBooking.getTickets()) {
             this.ticketService.updateTicketAvailable(ticketId);
         }
+    }
+
+    /**
+     *
+     * @param userId - user id to look up bookings for
+     * @return - list of bookings
+     */
+    @Override
+    public List<Booking> getUserBookings(UUID userId) {
+        return this.bookingRepository.findByUserId(userId);
     }
 }

@@ -1,4 +1,4 @@
-package com.ticketmaster_system_design.ticketmaster_booking_service.exceptions;
+package com.ticketmaster_system_design.ticketmaster_booking_service.controllers;
 
 
 import com.ticketmaster_system_design.ticketmaster_booking_service.models.Booking;
@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -32,6 +33,12 @@ public class BookingController {
         return ResponseEntity.ok(createdBooking);
     }
 
+    @GetMapping(path = "/users/{userId}")
+    public ResponseEntity<List<Booking>> getUserBookings(@PathVariable UUID userId) {
+        List<Booking> userBookings = this.bookingService.getUserBookings(userId);
+        return ResponseEntity.ok(userBookings);
+    }
+
     @PostMapping(path = "/reserve")
     public ResponseEntity<String> reserveBooking(@RequestBody CreateBookingRequest createBookingRequest) {
         this.bookingService.reserveBooking(createBookingRequest.getUserId(), createBookingRequest.getTickets());
@@ -43,5 +50,4 @@ public class BookingController {
         this.bookingService.deleteBooking(bookingId);
         return ResponseEntity.noContent().build();
     }
-
 }

@@ -10,4 +10,5 @@ public interface BookingService {
     Booking createBooking(UUID userId, List<UUID> tickets);
     Booking getBooking(UUID bookingId);
     void deleteBooking(UUID bookingId);
+    List<Booking> getUserBookings(UUID userId);
 }

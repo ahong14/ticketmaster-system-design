@@ -23,6 +23,8 @@ public class Ticket {
 
     private UUID userId;
 
+    private UUID bookingId;
+
     public Ticket() {
     }
 
@@ -80,6 +82,14 @@ public class Ticket {
 
     public void setUserId(UUID userId) {
         this.userId = userId;
+    }
+
+    public UUID getBookingId() {
+        return bookingId;
+    }
+
+    public void setBookingId(UUID bookingId) {
+        this.bookingId = bookingId;
     }
 
     @Override
