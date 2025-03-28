@@ -5,16 +5,26 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
 import com.stripe.param.PaymentIntentConfirmParams;
 import com.stripe.param.PaymentIntentCreateParams;
+import com.ticketmaster_system_design.ticketmaster_booking_service.models.Booking;
 import com.ticketmaster_system_design.ticketmaster_booking_service.models.requests.ChargeRequest;
+import com.ticketmaster_system_design.ticketmaster_booking_service.repositories.BookingRepository;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class StripeServiceImpl implements StripeService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private final BookingRepository bookingRepository;
+
+    @Autowired
+    public StripeServiceImpl(BookingRepository bookingRepository) {
+        this.bookingRepository = bookingRepository;
+    }
     @Value("${stripe.api.key}")
     private String stripeApiKey;
 
@@ -31,7 +41,7 @@ public class StripeServiceImpl implements StripeService {
      * @throws StripeException
      */
     @Override
-    public String charge(ChargeRequest chargeRequest) throws StripeException {
+    public String createPayment(ChargeRequest chargeRequest) throws StripeException {
         // stripe api only accepts currency in cents
         PaymentIntentCreateParams createParams = PaymentIntentCreateParams.builder()
                 .setAmount((long) chargeRequest.getAmount() * 100)
@@ -48,7 +58,16 @@ public class StripeServiceImpl implements StripeService {
                 .putMetadata("bookingId", chargeRequest.getBookingId().toString())
                 .build();
 
-        return PaymentIntent.create(createParams).toJson();
+        // create payment intent
+        PaymentIntent paymentIntent = PaymentIntent.create(createParams);
+
+        // update booking with payment id
+        Booking paymentBooking = this.bookingRepository.getReferenceById(chargeRequest.getBookingId());
+        paymentBooking.setPaymentId(paymentIntent.getId());
+        this.bookingRepository.save(paymentBooking);
+
+        // return payment intent json string
+        return paymentIntent.toJson();
     }
 
     /**
@@ -74,5 +93,10 @@ public class StripeServiceImpl implements StripeService {
     @Override
     public String getPayment(String paymentId) throws StripeException {
         return PaymentIntent.retrieve(paymentId).toJson();
+    }
+
+    @Override
+    public PaymentIntent findPayment(String paymentId) throws StripeException {
+        return PaymentIntent.retrieve(paymentId);
     }
 }
