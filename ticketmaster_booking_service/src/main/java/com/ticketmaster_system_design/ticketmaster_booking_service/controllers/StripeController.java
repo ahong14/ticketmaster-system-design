@@ -18,16 +18,16 @@ public class StripeController {
         this.stripeService = stripeService;
     }
 
+    @PostMapping
+    public ResponseEntity<String> createPayment(@RequestBody ChargeRequest chargeRequest) throws StripeException {
+        String paymentIntent = this.stripeService.createPayment(chargeRequest);
+        return ResponseEntity.ok(paymentIntent);
+    }
+
     @PostMapping(path = "/confirm")
     public ResponseEntity<String> confirmPayment(@RequestBody ConfirmChargeRequest confirmChargeRequest) throws StripeException {
         String confirmedPaymentIntent = this.stripeService.confirmPayment(confirmChargeRequest.getPaymentIntentId());
         return ResponseEntity.ok(confirmedPaymentIntent);
-    }
-
-    @PostMapping
-    public ResponseEntity<String> createPayment(@RequestBody ChargeRequest chargeRequest) throws StripeException {
-        String paymentIntent = this.stripeService.charge(chargeRequest);
-        return ResponseEntity.ok(paymentIntent);
     }
 
     @GetMapping(path = "/{paymentId}")

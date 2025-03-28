@@ -9,6 +9,9 @@ import java.util.UUID;
 
 @Entity
 public class Booking {
+    public enum BookingStatus {
+        IN_PROGRESS, CONFIRMED
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -21,6 +24,10 @@ public class Booking {
 
     private LocalDateTime updatedAt;
 
+    private BookingStatus bookingStatus;
+
+    private String paymentId;
+
     public Booking() {
 
     }
@@ -30,6 +37,14 @@ public class Booking {
         this.tickets = tickets;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+
+    public Booking(UUID userId, List<UUID> tickets, LocalDateTime createdAt, LocalDateTime updatedAt, BookingStatus bookingStatus) {
+        this.userId = userId;
+        this.tickets = tickets;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.bookingStatus = bookingStatus;
     }
 
     public UUID getId() {
@@ -70,5 +85,21 @@ public class Booking {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public BookingStatus getBookingStatus() {
+        return bookingStatus;
+    }
+
+    public void setBookingStatus(BookingStatus bookingStatus) {
+        this.bookingStatus = bookingStatus;
+    }
+
+    public String getPaymentId() {
+        return paymentId;
+    }
+
+    public void setPaymentId(String paymentId) {
+        this.paymentId = paymentId;
     }
 }

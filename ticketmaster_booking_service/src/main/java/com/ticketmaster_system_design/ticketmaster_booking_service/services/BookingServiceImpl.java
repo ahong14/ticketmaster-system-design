@@ -1,5 +1,7 @@
 package com.ticketmaster_system_design.ticketmaster_booking_service.services;
 
+import com.stripe.exception.StripeException;
+import com.stripe.model.PaymentIntent;
 import com.ticketmaster_system_design.ticketmaster_booking_service.models.Booking;
 import com.ticketmaster_system_design.ticketmaster_booking_service.repositories.BookingRepository;
 import jakarta.transaction.Transactional;
@@ -26,24 +28,28 @@ public class BookingServiceImpl implements BookingService {
 
     private final RedisTemplate<String, String> redisTemplate;
 
+    private final StripeService stripeService;
+
     private final String TICKET_KEY = "ticket_key_";
 
     private final Duration LOCK_TTL = Duration.ofMinutes(10);
 
     @Autowired
-    public BookingServiceImpl(BookingRepository bookingRepository, TicketServiceImpl ticketService, RedisTemplate<String, String> redisTemplate) {
+    public BookingServiceImpl(BookingRepository bookingRepository, TicketServiceImpl ticketService, RedisTemplate<String, String> redisTemplate, StripeServiceImpl stripeService) {
         this.bookingRepository = bookingRepository;
         this.ticketService = ticketService;
         this.redisTemplate = redisTemplate;
+        this.stripeService = stripeService;
     }
 
     /**
      *
      * @param userId - user id booking tickets
      * @param tickets - list of ticket ids being reserved
+     * @return Reserved booking
      */
     @Override
-    public void reserveBooking(UUID userId, List<UUID> tickets) {
+    public Booking reserveBooking(UUID userId, List<UUID> tickets) {
         // reserve tickets to user id in redis cache, lock tickets for TTL
         for (UUID ticket : tickets) {
             // if tickets not already booked
@@ -60,6 +66,11 @@ public class BookingServiceImpl implements BookingService {
                 throw new IllegalArgumentException("Ticket ID already reserved: " + ticket);
             }
         }
+
+        // create new booking with in progress status
+        LocalDateTime currentTime = LocalDateTime.now();
+        Booking newBooking = new Booking(userId, tickets, currentTime, currentTime, Booking.BookingStatus.IN_PROGRESS);
+        return this.bookingRepository.save(newBooking);
     }
 
     /**
@@ -125,5 +136,31 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<Booking> getUserBookings(UUID userId) {
         return this.bookingRepository.findByUserId(userId);
+    }
+
+    @Override
+    public Booking updateBookingConfirmed(String paymentId, UUID bookingId) throws StripeException {
+        // check for valid booking
+        Optional<Booking> foundBooking = this.bookingRepository.findById(bookingId);
+        if (foundBooking.isEmpty()) {
+            throw new NoSuchElementException("Booking ID not found: " + bookingId);
+        }
+
+        Booking updatedBooking = foundBooking.get();
+
+        if (updatedBooking.getBookingStatus() == Booking.BookingStatus.CONFIRMED) {
+            throw new IllegalArgumentException("Booking already confirmed.");
+        }
+
+        // check if payment was successfully processed
+        PaymentIntent paymentIntent = this.stripeService.findPayment(paymentId);
+
+        if (paymentIntent == null || paymentIntent.getStatus() != "succeeded") {
+            throw new IllegalArgumentException("Payment not successful, unable to confirm booking");
+        }
+
+        // update booking as confirmed
+        updatedBooking.setBookingStatus(Booking.BookingStatus.CONFIRMED);
+        return this.bookingRepository.save(updatedBooking);
     }
 }
